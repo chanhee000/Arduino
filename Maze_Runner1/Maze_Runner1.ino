@@ -212,7 +212,7 @@ void obstacle_avoidance(void)
   delay(100);
   motor_L_control(90);
   motor_R_control(90);
-  delay(500);
+  delay(200);
 
   while(flag)
   {
@@ -236,7 +236,7 @@ void obstacle_avoidance(void)
     else
     {
        //make clockwise circle
-      motor_L_control(15);
+      motor_L_control(10);
       motor_R_control(90);
     }
 
@@ -586,7 +586,6 @@ void run_heading_angle(void)
     motor_L_control((MOTOR_SPEED + Output) * 1.3);
     motor_R_control((MOTOR_SPEED - Output));
 
-    //wall_collision_avoid(MOTOR_SPEED);
 
     if (front_sonar < 200)
     {
@@ -617,54 +616,30 @@ void rotate(int angle)
   Serial.println(count);
   switch (maze_status)
   {
-    case 2: // cw 90deg
-      //motor_AB_stop();
-      Serial.println("case 2");
-      read_sonar_sensor();
-      read_imu_sensor();
-      delay(100);
+    case 2:
       target_heading_angle += angle;
       imu_rotation();
 
       break;
 
-    case 3: // ccw 90deg
-      //motor_AB_stop();
-      Serial.println("case 3");
-      read_sonar_sensor();
-      read_imu_sensor();
-      delay(100);
+    case 3:
       target_heading_angle -= angle;
-
       imu_rotation();
       break;
 
-    case 4: // U-turn
-      //motor_AB_stop();
-      Serial.println("case 4");
-      read_sonar_sensor();
-      read_imu_sensor();
-      delay(100);
+    case 4:
       target_heading_angle -= (2 * angle);
       imu_rotation();
       break;
 
     default:
       Serial.println("Go straight");
-      //wall_collision_avoid(MOTOR_SPEED);
       break;
   }
 }
 
-void loop2()
+void loop3()
 {
-  /*
-    read_sonar_sensor();
-    read_imu_sensor();
-    check_maze_status();
-    run_heading_angle();
-    rotate(170);
-  */
   read_line_sensor();
   line_following(read_line_sensor());
 }
@@ -679,9 +654,7 @@ void loop1()
 void loop()
 {
   int line_index = -10;
-
   line_index = read_line_sensor();
-
   mission_flag[0] = 0;
 
   if(mission_flag[0] == 0)   // 선 따라가기
@@ -692,7 +665,8 @@ void loop()
       mission_flag[0] = 1;
       mission_flag[1] = 0;
     }
-    else if((line_index == 0) && (right_sonar <= 100) && (left_sonar <= 100)){
+    else if((line_index == 0) && (right_sonar <= 100) && (left_sonar <= 100))
+    {
       mission_flag[2] = 0;
     }
     else
